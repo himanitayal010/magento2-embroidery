@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magneto_Embroidery::embroidery" title="Embroidery" module="Magneto_Embroidery" sortOrder="51" resource="Magneto_Embroidery::embroidery" dependsOnConfig="embroidery/general/enable"/>
+        <add id="Magneto_Embroidery::name" title="Name Embroidery" module="Magneto_Embroidery" sortOrder="10" resource="Magneto_Embroidery::name" parent="Magneto_Embroidery::embroidery" dependsOnConfig="embroidery/general/enable"/>
+        <add id="Magneto_Embroidery::fonts" title="Font Management" module="Magneto_Embroidery" sortOrder="10" action="embroidery/font/index" resource="Magneto_Embroidery::fonts" parent="Magneto_Embroidery::name" dependsOnConfig="embroidery/general/enable"/>
+        <add id="Magneto_Embroidery::color" title="Color Management" module="Magneto_Embroidery" sortOrder="10" action="embroidery/color/index" resource="Magneto_Embroidery::color" parent="Magneto_Embroidery::name" dependsOnConfig="embroidery/general/enable"/>
+        <add id="Magneto_Embroidery::stock" title="Stock Design" module="Magneto_Embroidery" sortOrder="10" resource="Magneto_Embroidery::stock" parent="Magneto_Embroidery::embroidery" dependsOnConfig="embroidery/general/enable"/>
+        <add id="Magneto_Embroidery::stocklogo" title="Stock Logo" module="Magneto_Embroidery" sortOrder="10" action="embroidery/stock/index" resource="Magneto_Embroidery::stocklogo" parent="Magneto_Embroidery::stock" dependsOnConfig="embroidery/general/enable"/>
+        <add id="Magneto_Embroidery::embroidery_config" title="Configuration" module="Magneto_Embroidery" sortOrder="99" parent="Magneto_Embroidery::embroidery" action="adminhtml/system_config/edit/section/embroidery" resource="Magneto_Embroidery::embroidery_config" dependsOnConfig="embroidery/general/enable"/>
+    </menu>
+</config>

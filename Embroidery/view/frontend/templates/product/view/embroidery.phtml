@@ -1,0 +1,660 @@
+    <div class="red embroidery_block" style="display: none;" data-sticky-container>
+    <div class="blankembroidery"><?php echo $block->escapeHtml(__('Test Text')) ?></div>
+
+    <div class="embroidery_options">
+        <h2><?php echo $block->escapeHtml(__('Embroidery Options')) ?></h2>
+        <div class="embroidery_options_start">
+            <p><?php echo $block->escapeHtml(__('Please allow approximately 5 to 7 days to embroider your items.')) ?></p>
+            <div class="embroidery_type">
+                <div class="magneto01"><label><input type="checkbox" name="name_embroidery" onchange="document.getElementById('product-addtocart-button-custom').disabled = !this.checked;" id="name_embroidery" value="name_start"><span><?php echo $block->escapeHtml(__('Name Embroidery')) ?></span></label></div>
+                <div class="magneto02"><label><input type="checkbox" name="stock_design" onchange="document.getElementById('product-addtocart-button-custom').disabled = !this.checked;" id="stock_design" value="stock_start"><span><?php echo $block->escapeHtml(__('Stock Design')) ?></span></label></div>
+                <div class="magneto03"><label><input type="checkbox" onchange="document.getElementById('product-addtocart-button-custom').disabled = !this.checked;" name="custom_logo" id="custom_logo" value="custom_logo"><span><?php echo $block->escapeHtml(__('New Custom Logo')) ?></span></label></div>
+            </div>
+
+            <div class="name_start" style="display: none;">
+                <?php
+                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                    $helper = $objectManager->create('Magneto\Embroidery\Helper\Data');
+                ?>
+                <h3 class="embroideryheadingthree"><?php echo $block->escapeHtml(__('Name Embroidery - $')) ?><?php echo $helper->getNamePrice() ?><?php echo $block->escapeHtml(__(' Per Line')) ?></h3>
+                <div class="lines_num">
+                    <span><?php echo $block->escapeHtml(__('No. of lines')) ?></span>
+                    <select name="options_3" id="options_3" class="options_3">
+                        <option value="1"><?php echo $block->escapeHtml(__('1')) ?></option>
+                        <option value="2"><?php echo $block->escapeHtml(__('2')) ?></option>
+                        <option value="3"><?php echo $block->escapeHtml(__('3')) ?></option>
+                    </select>
+                </div>               
+
+                <?php
+                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                    $colormodel = $objectManager->create('Magneto\Embroidery\Model\Color');
+                    $colorCollection = $colormodel->getCollection();
+
+                    $fontmodel = $objectManager->create('Magneto\Embroidery\Model\Font');
+                    $fontCollection = $fontmodel->getCollection();
+                    foreach ($fontCollection as $fonts){ ?>
+                        <link href="<?php echo $fonts->getFontUrl(); ?>" rel="stylesheet" />
+                    <?php }
+                ?>
+                <div id="1" class="selectedoption one_1 1">
+                    <div class="lines">
+                        <?php echo $block->escapeHtml(__('Line 1')) ?>
+                    </div>
+                    <div class="font_style">
+                        <h3><?php echo $block->escapeHtml(__('Font Style')) ?></h3>
+                        <div class="font_grid">
+                            <?php foreach ($fontCollection as $fonts) { ?>
+                                
+                                <div class="fonts">                                        
+                                    <div id="font_block fonts_<?php echo $fonts->getId() ?>" class="font_block fonts_<?php echo $fonts->getId() ?>" onclick="myFont (this, <?php echo $fonts->getId() ?>, '<?php echo $fonts->getFonts() ?>' )" style="font-family: <?php echo $fonts->getFontFamily() ?>">
+                                        <?php echo $fonts->getFonts() ?>
+                                    </div>
+                                    <span class="font_name"><?php echo $fonts->getFonts() ?></span>
+                                </div>                                
+                            <?php } ?>   
+                            <input type="hidden" name="fonts-vald" class="fonts-vald" value="">   
+                            <div class="font-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Select Font First...')) ?></div>                      
+                        </div>
+                    </div>
+                    <div class="color_style">
+                        <h3><?php echo $block->escapeHtml(__('Thread Color')) ?></h3>
+                        <div class="color_grid" id="selectable_color">
+                            <?php foreach ($colorCollection as $color) { ?>
+                                <div class="color">                                        
+                                    <div id="validatecolor" class="color_block color_<?php echo $color->getId() ?>" onclick="myColor (this, <?php echo $color->getId() ?>, '<?php echo $color->getThreadColor() ?>' )" style="background-color:#<?php echo $color->getColorCode() ?>;">
+                                    </div>
+                                    <span class="color_name"><?php echo $color->getThreadColor() ?></span>
+                                </div>
+                            <?php } ?>
+                            <input type="hidden" name="color-vald" class="color-vald" value="">
+                            <div class="color-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Select Color First...')) ?></div> 
+                        </div>
+                                                                            
+                    </div>
+                    <div class="placement_style">
+                        <h3><?php echo $block->escapeHtml(__('Placement')) ?></h3>
+                        <div class="placement_grid" id="selectable_placement">
+                            <div class="chest left_chest" id="left_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/lc.jpg'); ?>' alt="Left Chest" class="pimg left_chest_img" onclick='myPlacement (this, "left_chest_img", "left chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Chest')) ?></div>
+                            </div>
+                            <div class="chest right_chest" id="right_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/rc.jpg'); ?>' alt="Right Chest" class="pimg right_chest_img" onclick='myPlacement (this, "right_chest_img", "right chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Chest')) ?></div>
+                            </div>
+                            <div class="chest left_sleeve" id="left_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/ls.jpg'); ?>' alt="Left Sleeve" onclick='myPlacement (this, "left_sleeve_img", "left sleeve")' class="pimg left_sleeve_img">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Sleeve')) ?></div>
+                            </div>
+                            <div class="chest right_sleeve" id="right_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/rs.jpg'); ?>' alt="Right Sleeve" onclick='myPlacement (this, "right_sleeve_img", "right sleeve")' class="pimg right_sleeve_img">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Sleeve')) ?></div>
+                            </div>   
+                            <input type="hidden" name="placement-vald" class="placement-vald" value="">   
+                            <div class="placement-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Select Placement First...')) ?></div>                       
+                        </div>    
+                    </div>
+                    <div class="text_style">
+                        <h3><?php echo $block->escapeHtml(__('Text')) ?></h3>
+                        <span class="text_para_style"><?php echo $block->escapeHtml(__('Please enter text exactly as you would like it to appear. Maximum 20 Characters.')) ?></span>
+                        <div class="text_style_input">
+                            <div>
+                                <input type="text" name="input_text_design" id="input_text_design" placeholder="Enter text here" maxlength="20">
+                                <select class="name-line1">
+                                    <option value="none"><?php echo $block->escapeHtml(__('As Entered')) ?></option>
+                                    <option value="uppercase"><?php echo $block->escapeHtml(__('UPPER CASE')) ?></option>
+                                    <option value="lowercase"><?php echo $block->escapeHtml(__('lower case')) ?></option>
+                                    <option value="capitalize"><?php echo $block->escapeHtml(__('Mixed Case')) ?></option>
+                                </select>
+                                <input type="hidden" name="nametext-vald" class="nametext-vald" value=""> 
+                                <div class="name-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Enter Name First...')) ?></div>  
+                        </div>
+                            <textarea name="special_instructions" id="special_instructions" placeholder="Special instructions and/or comments" maxlength="50"></textarea>
+                            <p class="note"><?php echo $block->escapeHtml(__('Example: Put my embroidery 5 inch left from the neck.')) ?></p>
+                        </div>
+                    </div>                    
+                </div>
+                <div id="2" class="selectedoption two_2 2" style="display: none;">
+                    <div class="line2">
+                        <div class="lines">
+                            <?php echo $block->escapeHtml(__('Line 2')) ?>
+                        </div>
+                        <div class="font_style">
+                            <h3><?php echo $block->escapeHtml(__('Font Style')) ?></h3>
+                            <div class="font_grid">
+                                <?php foreach ($fontCollection as $fonts) { ?>
+
+                                    <div class="fonts">                                        
+                                        <div class="font_block2 fonts2_<?php echo $fonts->getId() ?>" onclick="myFont2 (this, <?php echo $fonts->getId() ?>, '<?php echo $fonts->getFonts() ?>' )" style="font-family: <?php echo $fonts->getFontFamily() ?>">
+                                            <?php echo $fonts->getFonts() ?>
+                                        </div>
+                                        <span class="font_name"><?php echo $fonts->getFonts() ?></span>
+                                    </div>                                
+                                <?php } ?>                            
+                            </div>
+                        </div>
+                        <div class="color_style">
+                            <h3><?php echo $block->escapeHtml(__('Thread Color')) ?></h3>
+                            <div class="color_grid" id="selectable_color">
+                                <?php foreach ($colorCollection as $color) { ?>
+                                    <div class="color">                                        
+                                        <div class="color_block2 color2_<?php echo $color->getId() ?>" onclick="myColor2 (this, <?php echo $color->getId() ?>, '<?php echo $color->getThreadColor() ?>' )" style="background-color:#<?php echo $color->getColorCode() ?>;">
+                                        </div>
+                                        <span class="color_name"><?php echo $color->getThreadColor() ?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>                                                   
+                        </div>
+                        <div class="placement_style">
+                        <h3><?php echo $block->escapeHtml(__('Placement')) ?></h3>
+                        <div class="placement_grid" id="selectable_placement">
+                            <div class="chest left_chest" id="left_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/lc.jpg'); ?>' alt="Left Chest" class="pimg left_chest_img2" onclick='myPlacement2 (this, "left_chest_img2", "left chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Chest')) ?></div>
+                            </div>
+                            <div class="chest right_chest" id="right_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/rc.jpg'); ?>' alt="Right Chest" class="pimg right_chest_img2" onclick='myPlacement2 (this, "right_chest_img2", "right chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Chest')) ?></div>
+                            </div>
+                            <div class="chest left_sleeve" id="left_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/ls.jpg'); ?>' alt="Left Sleeve" onclick='myPlacement2 (this, "left_sleeve_img2", "left sleeve")' class="pimg left_sleeve_img2">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Sleeve')) ?></div>
+                            </div>
+                            <div class="chest right_sleeve" id="right_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/rs.jpg'); ?>' alt="Right Sleeve" onclick='myPlacement2 (this, "right_sleeve_img2", "right sleeve")' class="pimg right_sleeve_img2">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Sleeve')) ?></div>
+                            </div>                            
+                        </div>    
+                    </div>
+                        <div class="text_style">
+                            <h3><?php echo $block->escapeHtml(__('Text')) ?></h3>
+                            <span class="text_para_style"><?php echo $block->escapeHtml(__('Please enter text exactly as you would like it to appear. Maximum 20 Characters.')) ?></span>
+                            <div class="text_style_input">
+                                <div><input type="text" name="input_text_design" id="input_text_design2" placeholder="Enter text here" maxlength="20">
+                                <select class="name-line2">
+                                    <option value="none"><?php echo $block->escapeHtml(__('As Entered')) ?></option>
+                                    <option value="uppercase"><?php echo $block->escapeHtml(__('UPPER CASE')) ?></option>
+                                    <option value="lowercase"><?php echo $block->escapeHtml(__('lower case')) ?></option>
+                                    <option value="capitalize"><?php echo $block->escapeHtml(__('Mixed Case')) ?></option>
+                                </select>
+                            </div>
+                                <textarea name="special_instructions" id="special_instructions2" placeholder="Special instructions and/or comments" maxlength="30"></textarea>
+                                 <p class="note"><?php echo $block->escapeHtml(__('Example: Put my embroidery 5 inch left from the neck.')) ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="3" class="selectedoption three_3 3" style="display: none;">
+                    <div class="line3">
+                        <div class="lines">
+                            <?php echo $block->escapeHtml(__('Line 3')) ?>
+                        </div>
+                        <div class="font_style">
+                            <h3><?php echo $block->escapeHtml(__('Font Style')) ?></h3>
+                            <div class="font_grid">
+                                <?php foreach ($fontCollection as $fonts) { ?>
+                                    <div class="fonts">                                        
+                                        <div class="font_block3 fonts3_<?php echo $fonts->getId() ?>" onclick="myFont3 (this, <?php echo $fonts->getId() ?>, '<?php echo $fonts->getFonts() ?>' )" style="font-family: <?php echo $fonts->getFontFamily() ?>">
+                                            <?php echo $fonts->getFonts() ?>
+                                        </div>
+                                        <span class="font_name"><?php echo $fonts->getFonts() ?></span>
+                                    </div>                                
+                                <?php } ?>                            
+                            </div>
+                        </div>
+                        <div class="color_style">
+                            <h3><?php echo $block->escapeHtml(__('Thread Color')) ?></h3>
+                            <div class="color_grid" id="selectable_color">
+                                <?php foreach ($colorCollection as $color) { ?>
+                                    <div class="color">                                        
+                                        <div class="color_block3 color3_<?php echo $color->getId() ?>" onclick="myColor3 (this, <?php echo $color->getId() ?>, '<?php echo $color->getThreadColor() ?>' )" style="background-color:#<?php echo $color->getColorCode() ?>;">
+                                        </div>
+                                        <span class="color_name"><?php echo $color->getThreadColor() ?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>                                                   
+                        </div>
+                        <div class="placement_style">
+                            <h3><?php echo $block->escapeHtml(__('Placement')) ?></h3>
+                            <div class="placement_grid" id="selectable_placement">
+                                <div class="chest left_chest" id="left_chest">
+                                    <img src='<?php echo $this->getViewFileUrl('images/lc.jpg'); ?>' alt="Left Chest" class="pimg3 left_chest_img3" onclick='myPlacement3 (this, "left_chest_img3", "left chest")'>
+                                    <div class="text_image"><?php echo $block->escapeHtml(__('Left Chest')) ?></div>
+                                </div>
+                                <div class="chest right_chest" id="right_chest">
+                                    <img src='<?php echo $this->getViewFileUrl('images/rc.jpg'); ?>' alt="Right Chest" class="pimg3 right_chest_img3" onclick='myPlacement3 (this, "right_chest_img3", "right chest")'>
+                                    <div class="text_image"><?php echo $block->escapeHtml(__('Right Chest')) ?></div>
+                                </div>
+                                <div class="chest left_sleeve" id="left_sleeve">
+                                    <img src='<?php echo $this->getViewFileUrl('images/ls.jpg'); ?>' alt="Left Sleeve" onclick='myPlacement3 (this, "left_sleeve_img3", "left sleeve")' class="pimg left_sleeve_img3">
+                                    <div class="text_image"><?php echo $block->escapeHtml(__('Left Sleeve')) ?></div>
+                                </div>
+                                <div class="chest right_sleeve" id="right_sleeve">
+                                    <img src='<?php echo $this->getViewFileUrl('images/rs.jpg'); ?>' alt="Right Sleeve" onclick='myPlacement3 (this, "right_sleeve_img3", "right sleeve")' class="pimg right_sleeve_img3">
+                                    <div class="text_image"><?php echo $block->escapeHtml(__('Right Sleeve')) ?></div>
+                                </div>                            
+                            </div>    
+                        </div>
+                        <div class="text_style">
+                            <h3><?php echo $block->escapeHtml(__('Text')) ?></h3>
+                            <span class="text_para_style"><?php echo $block->escapeHtml(__('Please enter text exactly as you would like it to appear. Maximum 20 Characters.')) ?></span>
+                            <div class="text_style_input">
+                                <div><input type="text" name="input_text_design" id="input_text_design3" placeholder="Enter text here" maxlength="20">
+                                <select class="name-line3">
+                                    <option value="none"><?php echo $block->escapeHtml(__('As Entered')) ?></option>
+                                    <option value="uppercase"><?php echo $block->escapeHtml(__('UPPER CASE')) ?></option>
+                                    <option value="lowercase"><?php echo $block->escapeHtml(__('lower case')) ?></option>
+                                    <option value="capitalize"><?php echo $block->escapeHtml(__('Mixed Case')) ?></option>
+                                </select>
+                            </div>
+                                <textarea name="special_instructions" id="special_instructions3" placeholder="Special instructions and/or comments" maxlength="30"></textarea>
+                                 <p class="note"><?php echo $block->escapeHtml(__('Example: Put my embroidery 5 inch left from the neck.')) ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stock_start" style="display: none;">
+                <?php
+                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                    $helper = $objectManager->create('Magneto\Embroidery\Helper\Data');
+                ?>
+                <h3 class="embroideryheadingthree"><?php echo $block->escapeHtml(__('Stock Design - $')) ?><?php echo $helper->getStockPrice() ?><?php echo $block->escapeHtml(__(' Per Line')) ?></h3>
+                <div class="lines_num">
+                    <span><?php echo $block->escapeHtml(__('No. of logos')) ?></span>
+                    <select name="options_2" id="options_2" class="options_2">
+                        <option value="logo1"><?php echo $block->escapeHtml(__('1')) ?></option>
+                        <option value="logo2"><?php echo $block->escapeHtml(__('2')) ?></option>
+                    </select>
+                </div>
+
+                <div id="logo1" class="selectedoption logo_1">
+                    <div class="lines">
+                        <?php echo $block->escapeHtml(__('Stock Design 1')) ?>
+                    </div>
+                    <div class="stock_logo">
+                        <?php
+                        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                        $stockmodel = $objectManager->create('Magneto\Embroidery\Model\Stock');
+                        $stockCollection = $stockmodel->getCollection();
+
+                        $storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface'); 
+                        $currentStore = $storeManager->getStore();
+                        $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+                        foreach ($stockCollection as $stockData) {
+                            if($stockData['stock_design'] != ' '):
+                            ?>
+
+                            <div class="tooltip logoname logoname_<?php echo $stockData['id'] ?>" onclick="stockimg(this,<?php echo $stockData['id'] ?>,'<?php echo $stockData['stock_design_name'] ?>')">
+                                <img id="stockvalidate" src='<?php echo $mediaUrl.$stockData['stock_design'] ?>' alt="Stock Design">
+                            </div>
+                            <?php
+                            endif;
+                        }
+                        ?>
+                        <input type="hidden" name="stock-vald" class="stock-vald" value="">   
+                        <div class="stock-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Select Stock Logo First...')) ?></div>    
+                    </div>
+                    <div class="stock_placement">
+                        <h3><?php echo $block->escapeHtml(__('Placement')) ?></h3>
+                        <div class="placement_grid" id="selectable_placement">
+                            <div class="chest stock_left_chest" id="stock_left_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/lc.jpg'); ?>' alt="Left Chest" class="pimg stock_left_chest_img" onclick='StockPlacement(this, "stock_left_chest_img", "left chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Chest')) ?></div>
+                            </div>
+                            <div class="chest stock_right_chest" id="stock_right_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/rc.jpg'); ?>' alt="Right Chest" class="pimg stock_right_chest_img" onclick='StockPlacement (this, "stock_right_chest_img", "right chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Chest')) ?></div>
+                            </div>
+                            <div class="chest stock_left_sleeve" id="stock_left_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/ls.jpg'); ?>' alt="Left Sleeve" onclick='StockPlacement (this, "stock_left_sleeve_img", "left sleeve")' class="pimg stock_left_sleeve_img">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Sleeve')) ?></div>
+                            </div>
+                            <div class="chest stock_right_sleeve" id="stock_right_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/rs.jpg'); ?>' alt="Right Sleeve" onclick='StockPlacement (this, "stock_right_sleeve_img", "right sleeve")' class="pimg stock_right_sleeve_img">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Sleeve')) ?></div>
+                            </div> 
+                            <input type="hidden" name="stockplacement-vald" class="stockplacement-vald" value="">   
+                            <div class="stockplacement-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Select Stock Placement First...')) ?></div>                             
+                        </div>    
+                    </div>
+                    <div class="stock_comments">
+                        <textarea name="textarea_stock_comments" id="stock_comments" placeholder="Special instructions and/or comments"></textarea>
+                         <p class="note"><?php echo $block->escapeHtml(__('Example: Put my embroidery 5 inch left from the neck.')) ?></p>
+                    </div>
+                </div> 
+
+                <div id="logo2" class="selectedoption logo_2" style="display: none;">
+                    <div class="lines">
+                        <?php echo $block->escapeHtml(__('Stock Design 2')) ?>
+                    </div>
+                    <div class="stock_logo">
+                        <?php
+                        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                        $stockmodel = $objectManager->create('Magneto\Embroidery\Model\Stock');
+                        $stockCollection = $stockmodel->getCollection();
+
+                        $storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface'); 
+                        $currentStore = $storeManager->getStore();
+                        $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+                        foreach ($stockCollection as $stockData) {
+                            if($stockData['stock_design'] != ' '):
+                            ?>
+
+                            <div class="tooltip logoname logoname2_<?php echo $stockData['id'] ?>" onclick="stockimg2(this, <?php echo $stockData['id'] ?>,'<?php echo $stockData['stock_design_name'] ?>')">
+                                <img src='<?php echo $mediaUrl.$stockData['stock_design'] ?>' alt="Stock Design">
+                            </div>
+                            <?php
+                            endif;
+                        }
+                        ?>
+                    </div>
+                    <div class="stock_placement">
+                        <h3><?php echo $block->escapeHtml(__('Placement')) ?></h3>
+                        <div class="placement_grid" id="selectable_placement">
+                            <div class="chest stock_left_chest" id="stock_left_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/lc.jpg'); ?>' alt="Left Chest" class="pimg stock_left_chest_img2" onclick='StockPlacement2(this, "stock_left_chest_img2", "left chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Chest')) ?></div>
+                            </div>
+                            <div class="chest stock_right_chest" id="stock_right_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/rc.jpg'); ?>' alt="Right Chest" class="pimg stock_right_chest_img2" onclick='StockPlacement2(this, "stock_right_chest_img2", "right chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Chest')) ?></div>
+                            </div>
+                            <div class="chest stock_left_sleeve" id="stock_left_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/ls.jpg'); ?>' alt="Left Sleeve" onclick='StockPlacement2(this, "stock_left_sleeve_img2", "left sleeve")' class="pimg stock_left_sleeve_img2">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Sleeve')) ?></div>
+                            </div>
+                            <div class="chest stock_right_sleeve" id="stock_right_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/rs.jpg'); ?>' alt="Right Sleeve" onclick='StockPlacement2(this, "stock_right_sleeve_img2", "right sleeve")' class="pimg stock_right_sleeve_img2">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Sleeve')) ?></div>
+                            </div>                            
+                        </div>    
+                    </div>
+                    <div class="stock_comments">
+                        <textarea name="textarea_stock_comments" id="stock_comments2" placeholder="Special instructions and/or comments"></textarea>
+                         <p class="note"><?php echo $block->escapeHtml(__('Example: Put my embroidery 5 inch left from the neck.')) ?></p>
+                    </div>
+                </div>  
+            </div>
+
+            <div class="custom_logo" style="display: none;">
+                <?php
+                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                    $helper = $objectManager->create('Magneto\Embroidery\Helper\Data');
+                ?>
+                <h3 class="embroideryheadingthree"><?php echo $block->escapeHtml(__('Custom Logo - $')) ?><?php echo $helper->getLogoPrice() ?><?php echo $block->escapeHtml(__(' Per Line + Setup Fee - $')) ?><?php echo $helper->getLogoPriceSetupFee() ?><?php echo $block->escapeHtml(__(' Per Line')) ?></h3>
+                <div class="custom_logo_image">
+                    <h3 class="customonetwo"><strong><?php echo $block->escapeHtml(__('Adding a custom logo is as easy as 1, 2, 3...')) ?></strong></h3>
+                    <div class="custom_logo_para">
+                        <ol class="background-bottom-customlogo">
+                            <li>
+                                <?php echo $block->escapeHtml(__('Upload your own design file. Please be sure it is saved as one of the following extensions: JPG, BMP or TIF')) ?>     
+                            </li>
+                            <li>
+                                <?php echo $block->escapeHtml(__('Approval & Processing Time: Digitizing and processing a sample of your custom logo will take approximately 5 business days for an emailed sample and 10 business days for a mailed sample.')) ?>     
+                            </li>
+                        </ol>
+                        <p>
+                            <?php echo $block->escapeHtml(__("A customer service representative will be contacting you within two days to review your order. Logo's above 10,000 stitches may incur additional setup charges and/or logo fees. Please ensure your contact information is correct during checkout.")) ?>
+                        </p>
+                    </div>
+                </div>
+                <div class="lines_num">
+                    <span><?php echo $block->escapeHtml(__('No. of logos')) ?></span>
+                    <select name="logooptions_2" id="logooptions_2" class="logooptions_2">
+                        <option value="customlogo1"><?php echo $block->escapeHtml(__('1')) ?></option>
+                        <option value="customlogo2"><?php echo $block->escapeHtml(__('2')) ?></option>
+                    </select>
+                </div>
+                <div id="customlogo1" class="selectedoption customlogo_1">
+                    <div class="lines">
+                        <?php echo $block->escapeHtml(__('Custom Logo 1')) ?>
+                    </div>
+                    <div class="custom_logo_1">
+                        <h3><?php echo $block->escapeHtml(__('Custom Logo:')) ?></h3>
+                        <div class="customlogo_upload customlogo_">
+                            <input type="file" name="custom_logo_upload" id="custom_logo_upload" class="custom_logo_upload" onchange="readImageOne(this);" multiple accept='image/*'/>
+                            <input type="submit" id="submitform" name="submitform" value="Submit Logo" style="display: none;"/>
+                            <div class="customlogo-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Upload Logo First...')) ?></div>  
+                        </div>
+                    </div>
+                    <div class="customlogo_placement">
+                        <h3><?php echo $block->escapeHtml(__('Placement')) ?></h3>
+                        <div class="placement_grid" id="selectable_placement">
+                            <div class="chest logo_left_chest" id="logo_left_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/lc.jpg'); ?>' alt="Left Chest" class="pimg logo_left_chest_img" onclick='LogoPlacement(this, "logo_left_chest_img", "left chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Chest')) ?></div>
+                            </div>
+                            <div class="chest logo_right_chest" id="logo_right_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/rc.jpg'); ?>' alt="Right Chest" class="pimg logo_right_chest_img" onclick='LogoPlacement (this, "logo_right_chest_img", "right chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Chest')) ?></div>
+                            </div>
+                            <div class="chest logo_left_sleeve" id="logo_left_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/ls.jpg'); ?>' alt="Left Sleeve" onclick='LogoPlacement (this, "logo_left_sleeve_img", "left sleeve")' class="pimg logo_left_sleeve_img">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Sleeve')) ?></div>
+                            </div>
+                            <div class="chest logo_right_sleeve" id="logo_right_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/rs.jpg'); ?>' alt="Right Sleeve" onclick='LogoPlacement (this, "logo_right_sleeve_img", "right sleeve")' class="pimg logo_right_sleeve_img">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Sleeve')) ?></div>
+                            </div>      
+                            <input type="hidden" name="customlogoplacement-vald" class="customlogoplacement-vald" value="">   
+                            <div class="customlogoplacement-error" style="color: #e02b27;font-size: 1.2rem; display: none;"><?php echo $block->escapeHtml(__('Please Select Custom Logo Placement First...')) ?></div>                        
+                        </div>    
+                    </div>
+                    <div class="logo_comments">
+                        <textarea name="textarea_logo" id="logo_comments" placeholder="Special instructions and/or comments"></textarea>
+                         <p class="note"><?php echo $block->escapeHtml(__('Example: Put my embroidery 5 inch left from the neck.')) ?></p>
+                    </div>
+                </div> 
+                <div id="customlogo2" class="selectedoption customlogo_2" style="display: none;">
+                    <div class="lines">
+                        <?php echo $block->escapeHtml(__('Custom Logo 2')) ?>
+                    </div>
+                    <div class="custom_logo_2">
+                        <h3><?php echo $block->escapeHtml(__('Custom Logo:')) ?></h3>
+                        <div class="customlogo2_upload customlogo2 ?>">
+                            <input type="file" name="custom_logo_upload2" id="custom_logo_upload2" class="custom_logo_upload2"  onchange="readImageTwo(this);" multiple accept='image/*'/>
+                            <input type="submit" id="submitform2" name="submitform2" value="Submit Logo" style="display: none;" />
+                        </div>
+                    </div>
+                    <div class="customlogo2_placement">
+                        <h3><?php echo $block->escapeHtml(__('Placement')) ?></h3>
+                        <div class="placement_grid" id="selectable_placement">
+                            <div class="chest logo_left_chest" id="logo_left_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/lc.jpg'); ?>' alt="Left Chest" class="pimg logo_left_chest_img2" onclick='LogoPlacement2(this, "logo_left_chest_img2", "left chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Chest')) ?></div>
+                            </div>
+                            <div class="chest logo_right_chest" id="logo_right_chest">
+                                <img src='<?php echo $this->getViewFileUrl('images/rc.jpg'); ?>' alt="Right Chest" class="pimg logo_right_chest_img2" onclick='LogoPlacement2(this, "logo_right_chest_img2", "right chest")'>
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Chest')) ?></div>
+                            </div>
+                            <div class="chest logo_left_sleeve" id="logo_left_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/ls.jpg'); ?>' alt="Left Sleeve" onclick='LogoPlacement2(this, "logo_left_sleeve_img2", "left sleeve")' class="pimg logo_left_sleeve_img2">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Left Sleeve')) ?></div>
+                            </div>
+                            <div class="chest logo_right_sleeve" id="logo_right_sleeve">
+                                <img src='<?php echo $this->getViewFileUrl('images/rs.jpg'); ?>' alt="Right Sleeve" onclick='LogoPlacement2(this, "logo_right_sleeve_img2", "right sleeve")' class="pimg logo_right_sleeve_img2">
+                                <div class="text_image"><?php echo $block->escapeHtml(__('Right Sleeve')) ?></div>
+                            </div>                            
+                        </div>    
+                    </div>
+                    <div class="logo_comments">
+                        <textarea name="textarea_logo2" id="logo_comments2" placeholder="Special instructions and/or comments"></textarea>
+                         <p class="note"><?php echo $block->escapeHtml(__('Example: Put my embroidery 5 inch left from the neck.')) ?></p>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <div class="embroidery_summary" data-sticky>
+        <!-- <div id="stickydiv"></div> -->
+        <div class="embr_border sticker">
+            <h2><?php echo $block->escapeHtml(__('Embroidery Summary')) ?></h2>
+            <div class="summary_attributes">  
+                <div class="text-summary-select"><?php echo $block->escapeHtml(__('Please Select Embroidery options...')) ?></div>
+                <div class="name_design_cus" id="cus_name" style="display: none;">
+                    <div class="forline1 selectedoption 1" id="1">
+                        <div class="line1 summarys">
+                            <div class="line_summary_heading">
+                                <h2 class="line_value" id="line_value1"><?php echo $block->escapeHtml(__('Line 1: ')) ?></h2>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Font Style')) ?></h4>
+                                <div class="font_value"><span><?php echo $block->escapeHtml(__('Please Select Font...')) ?></span></div>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Thread Color')) ?></h4>
+                                <div class="thread_color_value"><span><?php echo $block->escapeHtml(__('Please Select Color...')) ?></span></div>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Placement')) ?></h4>
+                                <div class="placement_value"><span><?php echo $block->escapeHtml(__('Please Select Placement...')) ?></span></div>
+                            </div>
+                            <input type="hidden" name="name_value" id="name_value" value=""/>
+                        </div>                    
+                    </div>
+                    <div class="forline2 selectedoption 2" id="2" style="display: none;">
+                        <div class="line2 summarys">
+                            <div class="line_summary_heading">
+                                <h2 class="line_value" id="line_value2"><?php echo $block->escapeHtml(__('Line 2: ')) ?></h2>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Font Style')) ?></h4>
+                                <div class="font_value2"><span><?php echo $block->escapeHtml(__('Please Select Font...')) ?></span></div>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Thread Color')) ?></h4>
+                                <div class="thread_color_value2"><span><?php echo $block->escapeHtml(__('Please Select Color...')) ?></span></div>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Placement')) ?></h4>
+                                <div class="placement_value2"><span><?php echo $block->escapeHtml(__('Please Select Placement...')) ?></span></div>
+                            </div>
+                            <input type="hidden" name="name_value2" id="name_value2" value=""/>
+                        </div>                        
+                    </div>
+                    <div class="forline3 selectedoption 3" id="3" style="display: none;">
+                        <div class="line3 summarys">
+                            <div class="line_summary_heading">
+                                <h2 class="line_value" id="line_value3"><?php echo $block->escapeHtml(__('Line 3: ')) ?></h2>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Font Style')) ?></h4>
+                                <div class="font_value3"><span><?php echo $block->escapeHtml(__('Please Select Font...')) ?></span></div>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Thread Color')) ?></h4>
+                                <div class="thread_color_value3"><span><?php echo $block->escapeHtml(__('Please Select Color...')) ?></span></div>
+                            </div>
+                            <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Placement')) ?></h4>
+                                <div class="placement_value3"><span><?php echo $block->escapeHtml(__('Please Select Placement...')) ?></span></div>
+                            </div>
+                            <input type="hidden" name="name_value3" id="name_value3" value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="stock design" id="cus_stock" style="display: none;">
+                    <div class="stock_logo1" id="logo1">
+                        <div class="heading_summary">
+                            <h2 class="logo_value" id="logo_value1"><?php echo $block->escapeHtml(__('Stock Design 1 ')) ?></h2>
+                        </div> 
+                        <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Stock Design')) ?></h4>
+                                <div class="stock_value" style="padding-left: 1em;"><span><?php echo $block->escapeHtml(__('Please Select Stock Design...')) ?></span></div>
+                            </div>  
+                        <div class="heading_summary">
+                            <h4><?php echo $block->escapeHtml(__('Placement')) ?></h4>
+                            <div class="stockplacement_value"><span><?php echo $block->escapeHtml(__('Please Select Placement...')) ?></span></div>
+                        </div>
+                    </div>
+                    <div class="stock_logo2" id="logo2" style="display: none;">
+                        <div class="heading_summary">
+                            <h2 class="logo_value" id="logo_value2"><?php echo $block->escapeHtml(__('Stock Design 2')) ?></h2>
+                        </div>          
+                        <div class="heading_summary">
+                                <h4><?php echo $block->escapeHtml(__('Stock Design')) ?></h4>
+                                <div class="stock_value2" style="padding-left: 1em;"><span><?php echo $block->escapeHtml(__('Please Select Stock Design...')) ?></span></div>
+                            </div>
+                        <div class="heading_summary">
+                            <h4><?php echo $block->escapeHtml(__('Placement')) ?></h4>
+                            <div class="stockplacement_value2"><span><?php echo $block->escapeHtml(__('Please Select Placement...')) ?></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="logo_design" id="cus_logo" style="display: none;">
+                    <div class="logo_logo1 customlogo1" id="logo_logo1">
+                        <div class="heading_summary">
+                            <h2 class="logo_value" id="logo_value1"><span><?php echo $block->escapeHtml(__('Custom Logo 1 ')) ?></span></h2>
+                        </div>     
+                        <div class="heading_summary">
+                            <h4><?php echo $block->escapeHtml(__('Placement')) ?></h4>
+                            <div class="logoplacement_value"><span><?php echo $block->escapeHtml(__('Please Select Placement...')) ?></span></div>
+                        </div>
+                    </div>
+                    <div class="logo_logo2 customlogo2" id="logo_logo2" style="display: none;">
+                        <div class="heading_summary">
+                            <h2 class="logo_value" id="logo_value2"><span><?php echo $block->escapeHtml(__('Custom Logo 2')) ?></span></h2>
+                        </div>          
+                        <div class="heading_summary">
+                            <h4><?php echo $block->escapeHtml(__('Placement')) ?></h4>
+                            <div class="logoplacement_value2"><span><?php echo $block->escapeHtml(__('Please Select Placement...')) ?></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="summarylines">
+                    <div class="line1namediv"></div>
+                    <div class="line2namediv"></div>
+                    <div class="line3namediv"></div>
+                    <div class="line1stockdiv"><img id="image-stock1" src=""/></div>
+                    <div class="line2stockdiv" style="display: none;"><img id="image-stock2" src=""/></div>
+                    <div class="line1logodiv"><img id="showimg1logo" src=""/></div>
+                    <div class="line2logodiv" style="display: none;"><img id="showimg2logo" src=""/></div>
+                </div>
+            </div>
+            <div class="newstarsuc">
+                <div class="embroidery_agree">
+                    <p><?php echo $block->escapeHtml(__('Please be sure your embroidery and placement shown above are correct as embroidered items cannot be exchanged or returned. If correct please click the box below and then click "Add to Cart" to continue')) ?></p>
+                    <div class="agree_check"><label><input type="checkbox" name="agree_embroidery_check" id="agree_embroidery_check"><span><?php echo $block->escapeHtml(__('Embroidery and placement above are correct.')) ?></span> <div id="embroidery_error_msg" class="embroidery_error_msg"></div>
+                    </label></div>
+                </div>
+            </div>
+        </div>
+        <div class="add-to-cart-button" style="padding-top: 1em;">
+            <button type="submit" name="add_to_cart_btn" title="Add to Cart" class="action primary tocartbtn" id="product-addtocart-button-custom" value="add_to_cart" style="width: 100%; margin-bottom: 1em;" onchange="document.getElementById('agree_embroidery_check').disabled = !this.checked;" ><span><?php echo $block->escapeHtml(__('Add to Cart')) ?></span></button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+            require(['jquery', 'stickySidebar'], function($) {
+                var sticky = new Sticky('[data-sticky]', {});
+            });
+        </script>
+<style type="text/css">
+    .catalog-product-view .note {
+        font-size: .8em;
+    }
+    .embroidery_error_msg{
+    color: #ff0000;
+    font-size: .8em;
+    font-weight: 500;
+ }
+ /*.newstarsuc {
+    float: right;
+    bottom: 23px;
+    position: absolute;
+    right: 200px;
+    width: 30%;
+ }*/
+ .red.embroidery_block { position: relative; } 
+</style>
+<script type="text/javascript">
+    // require(['jquery'], function($) {
+    //     var zzz = jQuery('.newstarsuc');
+    //     jQuery('.embr_border.sticky').append(zzz);
+    // });
+</script>

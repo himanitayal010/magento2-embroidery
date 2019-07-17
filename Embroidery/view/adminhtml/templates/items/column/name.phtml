@@ -1,0 +1,142 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * @see \Magento\Sales\Block\Adminhtml\Items\Column\Name
+ */
+?>
+
+<?php if ($_item = $block->getItem()): ?>
+    <div id="order_item_<?= $block->escapeHtml($_item->getId()) ?>_title"
+         class="product-title">
+        <?= $block->escapeHtml($_item->getName()) ?>
+    </div>
+    <div class="product-sku-block">
+        <span><?= $block->escapeHtml(__('SKU'))?>:</span> <?= implode('<br />', $this->helper('Magento\Catalog\Helper\Data')->splitSku($block->escapeHtml($block->getSku()))) ?>
+    </div>
+
+    <?php if ($block->getOrderOptions()): ?>
+        <dl class="item-options">
+            <?php foreach ($block->getOrderOptions() as $_option): ?>
+                <dt><?= $block->escapeHtml($_option['label']) ?>:</dt>
+                <dd>
+                    <?php if (isset($_option['custom_view']) && $_option['custom_view']): ?>
+                        <?= $block->escapeHtml($block->getCustomizedOptionValue($_option)) ?>
+                    <?php else: ?>
+                        <?php $_option = $block->getFormattedOption($_option['value']); ?>
+                        <?= $block->escapeHtml($_option['value']) ?>
+                        <?php if (isset($_option['remainder']) && $_option['remainder']): ?>
+                            <?php $dots = 'dots' . uniqid(); ?>
+                            <span id="<?= /* @noEscape */ $dots; ?>"> ...</span>
+                            <?php  $id = 'id' . uniqid(); ?>
+                            <span id="<?= /* @noEscape */ $id; ?>"><?= $block->escapeHtml($_option['remainder']) ?></span>
+                            <script>
+                                require(['prototype'], function(){
+                                    $('<?= /* @noEscape */ $id; ?>').hide();
+                                    $('<?= /* @noEscape */ $id; ?>').up().observe('mouseover', function(){$('<?= /* @noEscape */ $id; ?>').show();});
+                                    $('<?= /* @noEscape */ $id; ?>').up().observe('mouseover', function(){$('<?= /* @noEscape */ $dots; ?>').hide();});
+                                    $('<?= /* @noEscape */ $id; ?>').up().observe('mouseout',  function(){$('<?= /* @noEscape */ $id; ?>').hide();});
+                                    $('<?= /* @noEscape */ $id; ?>').up().observe('mouseout',  function(){$('<?= /* @noEscape */ $dots; ?>').show();});
+                                });
+                            </script>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </dd>
+            <?php endforeach; ?>
+        </dl>
+    <?php endif; ?>
+    
+    <?php
+    $quote_item_id = $_item->getQuoteItemId();
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+    // Get Embroidery Data
+        $collectionFactory = $objectManager->get('\Magneto\Embroidery\Model\ResourceModel\Quote\CollectionFactory');
+        $result_embroidery = $collectionFactory->create()->addFieldToFilter('quote_item_id', $quote_item_id);
+   
+    $storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface'); 
+    $currentStore = $storeManager->getStore();
+    $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);    
+    if($result_embroidery != ' '){ 
+        $name_embroidery = array();
+        $stock_embroidery = array();
+        $custom_logo = array();
+        foreach($result_embroidery as $embroidery){
+            $jsonHelper = $objectManager->get('\Magento\Framework\Json\Helper\Data');
+            if($embroidery['name_embroidery']){
+                $name_embroidery = $jsonHelper->jsonDecode($embroidery['name_embroidery']);
+            }
+            if($embroidery['stock_design']){
+                $stock_embroidery = $jsonHelper->jsonDecode($embroidery['stock_design']);
+            }
+            if($embroidery['custom_logo']){
+                $custom_logo = $jsonHelper->jsonDecode($embroidery['custom_logo']);
+            }
+                
+            $quote_item_id = $embroidery['quote_item_id'];
+        }
+        if($name_embroidery){
+            foreach ($name_embroidery as $value_emb) { ?>
+                <dl class="embroidery-options item-options" style="text-transform: capitalize;">
+                <dt><strong><?= $block->escapeHtml($value_emb['line']) ?></strong></dt>
+                <div><dt><?= $block->escapeHtml(__('Font')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_emb['font']) ?></dd></div>
+                <div><dt><?= $block->escapeHtml(__('Color')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_emb['color']) ?></dd></div>
+                <div><dt><?= $block->escapeHtml(__('Placement')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_emb['placement']) ?></dd></div>
+                <div><dt><?= $block->escapeHtml(__('Text')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_emb['name_text']) ?></dd></div>
+                <div><dt><?= $block->escapeHtml(__('Comments')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_emb['comment']) ?></dd></div>
+                </dl>
+            <?php }
+        }
+        if($stock_embroidery){
+            foreach ($stock_embroidery as $value_stock) { ?>
+                 <?php
+                    $stockval = $value_stock['stock_value'];
+                    $stocklogo = $objectManager->get('\Magneto\Embroidery\Model\ResourceModel\Stock\CollectionFactory');
+                    $result_embroidery = $stocklogo->create()->addFieldToFilter('stock_design_name', ltrim($stockval, ' '))->addFieldToSelect('stock_design'); 
+                    ?>
+                <dl class="embroidery-options item-options" style="text-transform: capitalize;">
+                <dt><strong><?= $block->escapeHtml($value_stock['logo']) ?></strong></dt>
+                <div><dt><?= $block->escapeHtml(__('Stock Design')) ?></dt>
+                    <dd>
+                        <?php foreach ($result_embroidery as $value) { ?>
+                            <a target="_blank" href="<?php echo $mediaUrl.$value['stock_design'] ?>" name="image" style="color:blue;display: inline-block;" >
+                                <?= $block->escapeHtml($value_stock['stock_value']) ?>
+                            </a>
+                            <?php } ?>
+                    </dd></div>
+                <div><dt><?= $block->escapeHtml(__('Placement')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_stock['stockplacement_value']) ?></dd></div>
+                <div><dt><?= $block->escapeHtml(__('Comments')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_stock['stock_comment']) ?></dd></div>
+                </dl>
+            <?php }
+        } 
+        if($custom_logo){
+            foreach ($custom_logo as $value_logo) { ?>
+                <dl class="embroidery-options item-options" style="text-transform: capitalize;">
+                <dt><strong><?php echo $block->escapeHtml($value_logo['logo']) ?></strong></dt>
+                <div><dt><?= $block->escapeHtml(__('Placement')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_logo['placement']) ?></dd></div>
+                <div><dt><?= $block->escapeHtml(__('Comments')) ?></dt>
+                    <dd><?= $block->escapeHtml($value_logo['comment']) ?></dd></div>
+                <div><dt><?= $block->escapeHtml(__('Logo : ')) ?></dt>
+                    <dd><a target="_blank" href="<?php echo $mediaUrl.$value_logo['custom_logo'] ?>">
+                    <?php echo $block->escapeHtml(__('Click Here to See Logo')) ?></a></span></dd></div>
+                </dl>
+            <?php }
+        }
+    } ?>
+    <?= $block->escapeHtml($_item->getDescription()) ?>
+<?php endif; ?>

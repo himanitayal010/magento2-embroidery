@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Checkout\Controller\Cart\Add" type="Magneto\Embroidery\Controller\Cart\Add" />
+    <preference for="Magento\Checkout\Controller\Cart\Delete" type="Magneto\Embroidery\Controller\Cart\Delete" />
+
+    <!--To override cart template--> 
+    <type name="Magento\Checkout\Block\Cart\AbstractCart">
+        <plugin name="cart-item-override" type="Magneto\Embroidery\Block\Cart\AbstractCart" sortOrder="1"/>
+    </type>
+</config> 

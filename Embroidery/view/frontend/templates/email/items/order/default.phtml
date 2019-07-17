@@ -1,0 +1,152 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Sales\Block\Order\Email\Items\DefaultItems */
+
+/** @var $_item \Magento\Sales\Model\Order\Item */
+$_item = $block->getItem();
+$_order = $_item->getOrder();
+$_store = $_order->getStore();
+$objectManagerInstance = \Magento\Framework\App\ObjectManager::getInstance();
+$_imageHelper = $objectManagerInstance->get('Magento\Catalog\Helper\Image');
+$quoteItemId = $_item['quote_item_id'];
+$quoteItemModel = $objectManagerInstance->create('Magento\Quote\Model\Quote\Item')->load($quoteItemId);
+$giftMessage = $quoteItemModel->getGiftMessage();
+$cakeMessage = $quoteItemModel->getCakeMessage();
+$productImage = $_imageHelper->init($_item->getProduct(), 'category_page_list', array('height' => 80 , 'width'=> 80))->getUrl();
+?>
+<tr>
+    <td>
+        <p><img src="<?= $_imageHelper->init($_item->getProduct(), 'small_image', ['type'=>'small_image'])->keepAspectRatio(true)->resize('65','65')->getUrl();?>" alt="<?= __('Product Image');?>"></p>
+    </td>
+    <td class="item-info<?php if ($block->getItemOptions()): ?> has-extra<?php endif; ?>">
+        <p class="product-name"><?= $block->escapeHtml($_item->getName()) ?></p>
+        <p class="sku"><?= /* @escapeNotVerified */  __('SKU') ?>: <?= $block->escapeHtml($block->getSku($_item)) ?></p>
+        <?php if ($block->getItemOptions()): ?>
+            <dl class="item-options">
+            <?php foreach ($block->getItemOptions() as $option): ?>
+                <dt><strong><em><?= /* @escapeNotVerified */  $option['label'] ?></em></strong></dt>
+                <dd>
+                    <?= /* @escapeNotVerified */  nl2br($option['value']) ?>
+                </dd>
+            <?php endforeach; ?>
+            </dl>
+        <?php endif; ?>
+        <?php
+        $quote_item_id = $_item->getQuoteItemId();
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        // Get Embroidery Data
+        $collectionFactory = $objectManager->get('\Magneto\Embroidery\Model\ResourceModel\Quote\CollectionFactory');
+        $result_embroidery = $collectionFactory->create()->addFieldToFilter('quote_item_id', $quote_item_id);
+        
+        $storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface'); 
+        $currentStore = $storeManager->getStore();
+        $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);    
+
+        $name_embroidery = array();
+        $stock_embroidery = array();
+        $custom_logo = array();
+        foreach($result_embroidery as $embroidery){
+            $jsonHelper = $objectManager->get('\Magento\Framework\Json\Helper\Data');
+            if($embroidery['name_embroidery']){
+                $name_embroidery = $jsonHelper->jsonDecode($embroidery['name_embroidery']);
+            }
+            if($embroidery['stock_design']){
+                $stock_embroidery = $jsonHelper->jsonDecode($embroidery['stock_design']);
+            }
+            if($embroidery['custom_logo']){
+                $custom_logo = $jsonHelper->jsonDecode($embroidery['custom_logo']);
+            }
+            $quote_item_id = $embroidery['quote_item_id'];
+        }
+        if($name_embroidery){
+                foreach ($name_embroidery as $value_emb) { ?>
+                    <dl class="embroidery-options item-options" style="text-transform: capitalize;">
+                    <dt><strong><?= $block->escapeHtml($value_emb['line']) ?></strong></dt>
+                    <div><dt><?= $block->escapeHtml(__('Font : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_emb['font']) ?></dd></div>
+                    <div><dt><?= $block->escapeHtml(__('Color : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_emb['color']) ?></dd></div>
+                    <div><dt><?= $block->escapeHtml(__('Placement : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_emb['placement']) ?></dd></div>
+                    <div><dt><?= $block->escapeHtml(__('Text : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_emb['name_text']) ?></dd></div>
+                    <div><dt><?= $block->escapeHtml(__('Comments : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_emb['comment']) ?></dd></div>
+                    </dl>
+                <?php }
+        }
+            if($stock_embroidery){
+                foreach ($stock_embroidery as $value_stock) { ?>
+                    <?php
+                    $stockval = $value_stock['stock_value'];
+                    $stocklogo = $objectManager->get('\Magneto\Embroidery\Model\ResourceModel\Stock\CollectionFactory');
+                    $result_embroidery = $stocklogo->create()->addFieldToFilter('stock_design_name', ltrim($stockval, ' '))->addFieldToSelect('stock_design'); 
+                    ?>
+                    <dl class="embroidery-options item-options" style="text-transform: capitalize;">
+                    <dt><strong><?= $block->escapeHtml($value_stock['logo']) ?></strong></dt>
+                    <div><dt><?= $block->escapeHtml(__('Stock Design : ')) ?></dt>
+                        <dd>
+                            <?php foreach ($result_embroidery as $value) { ?>
+                            <a target="_blank" href="<?php echo $mediaUrl.$value['stock_design'] ?>" name="image" style="color:blue;display: inline-block;" >
+                                <?= $block->escapeHtml($value_stock['stock_value']) ?>
+                            </a>
+                            <?php } ?>
+                        </dd>
+                    </div>
+                    <div><dt><?= $block->escapeHtml(__('Placement : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_stock['stockplacement_value']) ?></dd></div>
+                    <div><dt><?= $block->escapeHtml(__('Comments : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_stock['stock_comment']) ?></dd></div>
+                    </dl>
+                <?php }
+            } 
+            if($custom_logo){
+                foreach ($custom_logo as $value_logo) { ?>
+                    <dl class="embroidery-options item-options" style="text-transform: capitalize;">
+                    <dt><strong><?php echo $block->escapeHtml($value_logo['logo']) ?></strong></dt>
+                    <div><dt><?= $block->escapeHtml(__('Placement : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_logo['placement']) ?></dd></div>
+                    <div><dt><?= $block->escapeHtml(__('Comments : ')) ?></dt>
+                        <dd><?= $block->escapeHtml($value_logo['comment']) ?></dd></div>
+                    <div><dt><?= $block->escapeHtml(__('Logo : ')) ?>
+                        <dd><a target="_blank" style="color:blue;" href="<?php echo $mediaUrl.$value_logo['custom_logo'] ?>">
+                        <?php echo $block->escapeHtml(__('Click Here to See Logo')) ?></a></span></dd></dt>
+                    </dl>
+                <?php }
+            }
+        /*}*/ ?>
+        <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+        <?php if ($addInfoBlock) :?>
+            <?= $addInfoBlock->setItem($_item)->toHtml() ?>
+        <?php endif; ?>
+        <?= $block->escapeHtml($_item->getDescription()) ?>
+    </td>
+    <td class="item-qty"><?= /* @escapeNotVerified */  $_item->getQtyOrdered() * 1 ?></td>
+    <td class="item-price">
+        <?= /* @escapeNotVerified */  $block->getItemPrice($_item) ?>
+    </td>
+</tr>
+<?php if ($_item->getGiftMessageId() && $_giftMessage = $this->helper('Magento\GiftMessage\Helper\Message')->getGiftMessage($_item->getGiftMessageId())): ?>
+<tr>
+    <td colspan="3" class="item-extra">
+        <table class="message-gift">
+            <tr>
+                <td>
+                    <h3><?= /* @escapeNotVerified */  __('Gift Message') ?></h3>
+                    <strong><?= /* @escapeNotVerified */  __('From:') ?></strong> <?= $block->escapeHtml($_giftMessage->getSender()) ?>
+                    <br /><strong><?= /* @escapeNotVerified */  __('To:') ?></strong> <?= $block->escapeHtml($_giftMessage->getRecipient()) ?>
+                    <br /><strong><?= /* @escapeNotVerified */  __('Message:') ?></strong>
+                    <br /><?= $block->escapeHtml($_giftMessage->getMessage()) ?>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<?php endif; ?>

@@ -1,0 +1,249 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Checkout\Block\Cart\Item\Renderer */
+
+$_item = $block->getItem();
+$product = $_item->getProduct();
+$isVisibleProduct = $product->isVisibleInSiteVisibility();
+/** @var \Magento\Msrp\Helper\Data $helper */
+$helper = $this->helper('Magento\Msrp\Helper\Data');
+$canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinimalPriceLessMsrp($product);
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$wishlistMoveUrl = $objectManager->create('Magento\Wishlist\Helper\Data')->getMoveFromCartParams($_item->getId());
+$deletePostJsonBlock = $objectManager->create('Magento\Checkout\Helper\Cart')->getDeletePostJson($_item);
+
+// Get Embroidery Data
+$collectionFactory = $objectManager->get('\Magneto\Embroidery\Model\ResourceModel\Quote\CollectionFactory');
+$result_embroidery = $collectionFactory->create()->addFieldToFilter('quote_item_id', $_item->getId()); 
+
+$storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface'); 
+$currentStore = $storeManager->getStore();
+$mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+<tbody class="cart item">
+    <tr class="item-info">
+        <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
+            <?php if ($block->hasProductUrl()):?>
+                <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>"
+                   title="<?= $block->escapeHtml($block->getProductName()) ?>"
+                   tabindex="-1"
+                   class="product-item-photo">
+            <?php else:?>
+                <span class="product-item-photo">
+            <?php endif;?>
+            <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
+            <?php if ($block->hasProductUrl()):?>
+                </a>
+            <?php else: ?>
+                </span>
+            <?php endif; ?>
+            <div class="product-item-details">
+                <strong class="product-item-name">
+                    <?php if ($block->hasProductUrl()):?>
+                        <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>"><?= $block->escapeHtml($block->getProductName()) ?></a>
+                    <?php else: ?>
+                        <?= $block->escapeHtml($block->getProductName()) ?>
+                    <?php endif; ?>
+                </strong>
+                <div class="cart-product-sku">
+                        <span class="sku-label">SKU <?php echo $product->getSku(); ?></span>
+                </div>
+                <?php if ($_options = $block->getOptionList()):?>
+                    <ul class="item-options">
+                        <?php foreach ($_options as $_option) : ?>
+                            <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                            <li><label><?= $block->escapeHtml($_option['label']) ?>:</label></li>
+                            <li>
+                                <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                    <?= /* @escapeNotVerified */ $_formatedOptionValue['full_view'] ?>
+                                <?php else: ?>
+                                    <?= /* @escapeNotVerified */ $_formatedOptionValue['value'] ?>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                        <?php
+                        if($result_embroidery != ' '){ ?>
+                        <div class="embroidery_options">
+                            <?php
+                            $name_embroidery = array();
+                            $stock_embroidery = array();
+                            $custom_logo = array();
+                            foreach($result_embroidery as $embroidery){
+                                $jsonHelper = $objectManager->get('\Magento\Framework\Json\Helper\Data');
+                                if($embroidery['name_embroidery']){
+                                    $name_embroidery = $jsonHelper->jsonDecode($embroidery['name_embroidery']);
+                                }
+                                if($embroidery['stock_design']){
+                                    $stock_embroidery = $jsonHelper->jsonDecode($embroidery['stock_design']);
+                                }
+                                if($embroidery['custom_logo']){
+                                    $custom_logo = $jsonHelper->jsonDecode($embroidery['custom_logo']);
+                                }
+                                
+                                $quote_item_id = $embroidery['quote_item_id'];
+                            }
+                            if($name_embroidery){
+                                foreach ($name_embroidery as $value_emb) {
+                                if($_item->getId() == $block->escapeHtml($quote_item_id)){ ?>
+                                    <div class="listing_embroidery"> 
+                                        <li><label><?php echo $block->escapeHtml($value_emb['line']) ?></label></li> 
+                                        <li><label><?php echo $block->escapeHtml(__('Font :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_emb['font']) ?></span>
+                                        </li>
+                                        <li><label><?php echo $block->escapeHtml(__('Color :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_emb['color']) ?></span>
+                                        </li>
+                                        <li><label><?php echo $block->escapeHtml(__('Placement :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_emb['placement']) ?></span>
+                                        </li>
+                                        <li><label><?php echo $block->escapeHtml(__('Text :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_emb['name_text']) ?></span>
+                                        </li>
+                                        <li><label><?php echo $block->escapeHtml(__('Comments :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_emb['comment']) ?></span>
+                                        </li>
+                                    </div>
+                                <?php }
+                                }
+                            }
+                            if($stock_embroidery){
+                                foreach ($stock_embroidery as $value_stock) { 
+                                if($_item->getId() == $block->escapeHtml($quote_item_id)){ ?>
+                                    <?php
+                                    $stockval = $value_stock['stock_value'];
+                                    $stocklogo = $objectManager->get('\Magneto\Embroidery\Model\ResourceModel\Stock\CollectionFactory');
+                                    $result_embroidery = $stocklogo->create()->addFieldToFilter('stock_design_name', ltrim($stockval, ' '))->addFieldToSelect('stock_design'); 
+                                    ?>
+                                    <div class="listing_embroidery">
+                                        <li><label><?php echo $block->escapeHtml($value_stock['logo']) ?></label></li> 
+                                        <li><label><?php echo $block->escapeHtml(__('Stock Design :  ')) ?></label>
+                                            <span><?php 
+                                                foreach ($result_embroidery as $value) { ?>
+                                        <a target="_blank" href="<?php echo $mediaUrl.$value['stock_design'] ?>" name="image" style="color:blue;display: inline-block;" >
+                                                    <?= $block->escapeHtml($value_stock['stock_value']) ?>
+                                                </a>
+                                                <?php
+                                                } ?>
+                                                
+                                            </span>
+                                        </li>
+                                        <li><label><?php echo $block->escapeHtml(__('Placement :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_stock['stockplacement_value']) ?></span>
+                                        </li>
+                                        </li> 
+                                        <li><label><?php echo $block->escapeHtml(__('Comments :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_stock['stock_comment']) ?></span>
+                                        </li>
+                                    </div>
+                                <?php }
+                                }
+                            }
+                            if($custom_logo){
+                                foreach ($custom_logo as $value_logo) { 
+                                if($_item->getId() == $block->escapeHtml($quote_item_id)){ ?>
+                                    <div class="listing_embroidery">
+                                        <li><label><?php echo $block->escapeHtml($value_logo['logo']) ?></label></li> 
+                                        <li><label><?php echo $block->escapeHtml(__('Placement :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_logo['placement']) ?></span>
+                                        </li>
+                                        <li><label><?php echo $block->escapeHtml(__('Comments :  ')) ?></label>
+                                            <span><?php echo $block->escapeHtml($value_logo['comment']) ?></span>
+                                        </li><br/>
+                                        <li><label><?php echo $block->escapeHtml(__('Logo :  ')) ?>
+                                            <a target="_blank" href="<?php echo $mediaUrl.$value_logo['custom_logo'] ?>" name="image" style="color:blue;">
+                                                <?php echo $block->escapeHtml(__('Click Here to See Logo')) ?>
+                                            </a>
+                                        </li>
+                                    </div>
+                                <?php }
+                                } 
+                            } ?> 
+                        </div>
+                        <?php } ?>
+                    </ul>
+                <?php endif;?>
+                <?php if ($messages = $block->getMessages()): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <div class="cart item message <?= /* @escapeNotVerified */ $message['type'] ?>"><div><?= $block->escapeHtml($message['text']) ?></div></div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+                <?php if ($addInfoBlock): ?>
+                    <?= $addInfoBlock->setItem($_item)->toHtml() ?>
+                <?php endif;?>
+            </div>
+        </td>
+
+        <?php if ($canApplyMsrp): ?>
+            <td class="col msrp" data-th="<?= $block->escapeHtml(__('Price')) ?>">
+                <span class="pricing msrp">
+                    <span class="msrp notice"><?= /* @escapeNotVerified */ __('See price before order confirmation.') ?></span>
+                    <?php $helpLinkId = 'cart-msrp-help-' . $_item->getId(); ?>
+                    <a href="#" class="action help map" id="<?= /* @escapeNotVerified */ ($helpLinkId) ?>" data-mage-init='{"addToCart":{"helpLinkId": "#<?= /* @escapeNotVerified */ $helpLinkId ?>","productName": "<?= /* @escapeNotVerified */ $product->getName() ?>","showAddToCart": false}}'>
+                        <span><?= /* @escapeNotVerified */ __("What's this?") ?></span>
+                    </a>
+                </span>
+            </td>
+        <?php else: ?>
+            <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
+                <?= $block->getUnitPriceHtml($_item) ?>
+            </td>
+        <?php endif; ?>
+        <td class="col qty" data-th="<?= $block->escapeHtml(__('Qty')) ?>">
+            <div class="field qty">
+                <label class="label" for="cart-<?= /* @escapeNotVerified */ $_item->getId() ?>-qty">
+                    <span><?= /* @escapeNotVerified */ __('Qty') ?></span>
+                </label>
+                <div class="control qty">
+                    <input id="cart-<?= /* @escapeNotVerified */ $_item->getId() ?>-qty"
+                           name="cart[<?= /* @escapeNotVerified */ $_item->getId() ?>][qty]"
+                           data-cart-item-id="<?= $block->escapeHtml($_item->getSku()) ?>"
+                           value="<?= /* @escapeNotVerified */ $block->getQty() ?>"
+                           type="number"
+                           size="4"
+                           title="<?= $block->escapeHtml(__('Qty')) ?>"
+                           class="input-text qty"
+                           data-validate="{required:true,'validate-greater-than-zero':true}"
+                           data-role="cart-item-qty"/>
+
+
+                    
+                </div>
+            </div>
+             <div class="product-stocksttaus">
+                        <span class="instock-status">In Stock</span>
+                </div>
+        </td>
+
+        <td class="col subtotal" data-th="<?= $block->escapeHtml(__('Subtotal')) ?>">
+            <?php if ($canApplyMsrp): ?>
+                <span class="cart msrp subtotal">--</span>
+            <?php else: ?>
+                <?= $block->getRowTotalHtml($_item) ?>
+            <?php endif; ?>
+        </td>
+
+        
+
+    </tr>
+    <tr class="item-actions">
+        <td colspan="3" class="col delete" data-th="<?php echo $block->escapeHtml(__('Remove item'));?>">
+            <span class="actions-addwislist" data-role="add-to-links">
+               <a href="#" class="action towishlist" data-post='<?= /* @escapeNotVerified */ $wishlistMoveUrl ?>'>
+                   Move to Wishlist
+               </a>
+            </span>
+        </td>
+        <td class="remove-item">
+            <div class="actions-toolbar">
+                <?= /* @escapeNotVerified */ $block->getActions($_item) ?>
+            </div>
+        </td>        
+    </tr>
+</tbody>

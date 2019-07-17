@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <embroidery>
+            <general>
+                <enable>1</enable>
+                <name_price>5.99</name_price>
+                <stock_price>8.99</stock_price>
+                <logo_price>8.99</logo_price>
+                <logo_price_setup_fee>12.99</logo_price_setup_fee>
+            </general>
+        </embroidery>
+    </default>
+</config>

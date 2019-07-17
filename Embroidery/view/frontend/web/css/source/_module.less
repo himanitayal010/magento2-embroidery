@@ -1,0 +1,701 @@
+/*
+Less: Magneto_Embroidery
+*/
+	.catalog-product-view{
+
+		.embr_border.sticky {
+	        position: fixed;
+	        top: 0;
+	        background-color: #fff;
+	        z-index: 99;
+	        overflow-y: scroll;
+	        overflow-x: hidden;
+	    }
+	    .box-tocart .fieldset{
+	        position: relative;
+	    }
+	    .actions.sticky {
+	        position: fixed;
+	        top: 0.1px;
+	        margin-right: 13.5em;
+	        background-color: #fff;
+	        z-index: 9999;
+	        width: 34%;
+	    }
+
+		.field.qty{
+			.label {
+				display: block;
+			}
+			.control {
+				display: inline-block;
+			}
+			.embroidery_checkbox {
+				display: inline-block;
+			    margin-left: 3em;
+			    padding: .4em 1em;
+			    background: #f3f2f2;
+			    span {
+			    	padding-left: 1em;
+			    }
+			}
+		} 
+
+		.red.embroidery_block {
+			.blankembroidery {
+				float: left;
+				width: 9%;
+				display: inline-block;
+	    		color: transparent;
+			}
+			.embroidery_options {
+				display: inline-block;
+				width: 41%;
+				padding-top: 2em;
+				float: left;
+
+				select.name-line1, select.name-line2, select.name-line3 {
+	    			display: inline-block;
+				    width: auto;
+				    background-color: #ececec;
+				    height: 2.6em;
+	    		}
+
+				h2{
+		    		text-transform: uppercase;
+					font-weight: 600;
+					color: rgba(0, 0, 0, 0.6);
+					letter-spacing: 1px;
+					padding-bottom: .7em;
+		    	}
+
+		    	.embroidery_options_start {
+
+		    		.embroidery_type {
+		    			padding-left: 2em;
+
+		    			div span {
+		    				padding-left: 1em;
+		    			}
+		    		}
+		    		.name_start {
+
+		    			h3.embroideryheadingthree{
+		    				display: inline-block;
+						    padding: .5em .5em;
+						    background: #f3f2f2;
+						    width: 100%;
+						    text-transform: uppercase;
+						    color: #000;
+		    			}
+
+		    			.lines_num {
+
+		    				#options_3 {
+		    					width: 15%;
+							    margin-left: 1em;
+							    color: #000;
+		    				}
+		    			}
+		    			.selectedoption {
+
+		    				.lines {
+		    					margin: 20px 0;
+							    border-top: 2px solid #c3c3c3;
+							    border-bottom: 2px solid #c3c3c3;
+							    padding: 4px 0;
+							    text-transform: uppercase;
+							    font-weight: 500;
+		    				}
+
+			    			.font_style {
+			    				padding-bottom: 1em;
+	    						border-bottom: 2px solid #d2cfcff2;
+
+			    				h3 {
+			    					color: #000;
+								    letter-spacing: 1px;
+								    text-transform: uppercase;
+								    font-weight: 500;
+			    				}
+			    				.fonts {
+			    					display: inline-block;
+								    width: 48%;
+								    padding-bottom: .5em;
+
+								    &:nth-child(even) {
+			    						float: right;
+			    					}
+			    					&:nth-child(odd) {
+			    						margin-right: 17px;
+			    					}
+
+			    					.selected_font {
+			    						border: 1px solid #000 !important;
+			    					}
+
+			    					.font_block, .font_block2, .font_block3 {
+			    						border: 1px solid #c3c3c3;
+									    font-size: 1.5em;
+									    text-transform: capitalize;
+									    padding-left: .5em;
+									    font-weight: 600;
+									    color: #000;	
+									    cursor: pointer;    						
+									}
+									.font_name {
+										text-transform: capitalize;
+										font-size: .9em;
+									}
+			    				}
+			    			}	   				
+
+		    				.color_style {
+		    					padding-bottom: 1em;
+	    						border-bottom: 1px solid #d2cfcff2;
+
+	    						h3 {
+	    							color: #000;
+								    letter-spacing: 1px;
+								    text-transform: uppercase;
+								    font-weight: 500;
+	    						}
+		    					.color {
+		    						display: inline-block;
+		    						width: 18%;
+		    						margin-right: 5px;
+
+		    						.selected_color {
+			    						border: 1px solid #000 !important;
+			    					}
+
+		    						.color_block, .color_block2, .color_block3 {
+		    							width: 100%;
+									    text-transform: capitalize;
+									    border: 1px solid #c3c3c3;
+									    font-size: 1.5em;
+									    padding: 0 0 0 11px;
+									    height: 22px;
+									    cursor: pointer;
+		    						}
+		    						.color_name {
+		    							text-transform: capitalize;
+		    							font-size: .9em;
+		    						}
+		    					}
+		    				}
+
+		    				.placement_style {
+		    					h3 {
+		    						color: #000;
+								    letter-spacing: 1px;
+								    text-transform: uppercase;
+								    font-weight: 500;
+		    					}
+		    					padding-bottom: 2em;
+	    						border-bottom: 1px solid #d2cfcff2;
+	    						.placement_grid {
+	    							.selected_placement {
+	    								border: 1px solid #000 !important;
+	    							}
+	    							.chest {
+	    								display: inline-block;
+	    								
+	    								&.left_chest, &.right_chest, &.left_sleeve {
+	    									margin-right: 15px;
+	    								}
+	    								.text_image {
+	    									font-size: .9em;
+	    								}
+	    								img {
+	    									border: 1px solid #bbbbbb;
+	    									cursor: pointer;
+	    								}
+	    							}
+	    						}
+		    				}
+
+		    				.text_style {
+		    					padding-top: 1em;
+
+		    					h3 {
+		    						color: #000;
+								    letter-spacing: 1px;
+								    text-transform: uppercase;
+								    font-weight: 500;
+		    					}
+		    					.text_para_style {
+		    						font-size: .92em;
+		    					}
+		    					.text_style_input {
+		    						padding: 1em 0;
+		    						div {
+		    							padding-bottom: 1em;
+		    							input[type="text"] {
+		    								display: inline-block;
+	   										width: 65%;
+	   										color: #000;
+											font-weight: 600;
+											padding-left: .6em;
+
+	   										&::-webkit-input-placeholder {
+											    color: #000;
+											    font-weight: 600;
+											    padding-left: .6em;
+											}
+		    							}
+		    							.enter_text {
+		    								display: inline-block;
+										    float: right;
+										    width: 30%;
+		    							}
+		    						}
+		    						textarea {
+		    							border-color: #dddddd;
+		    							color: #000;
+										font-weight: 600;
+										padding-left: .6em;
+		    							&::-webkit-input-placeholder {
+											font-weight: 600;
+											padding-left: .6em;
+										}
+		    						}
+		    					}
+		    				}
+		    			}
+		    		}
+
+		    		.stock_start {
+						h3.embroideryheadingthree{
+		    				display: inline-block;
+						    padding: .5em .5em;
+						    background: #f3f2f2;
+						    width: 100%;
+						    text-transform: uppercase;
+						    color: #000;
+		    			}
+		    			.lines_num {
+		    				#options_2 {
+		    					width: 15%;
+							    margin-left: 1em;
+							    color: #000;
+		    				}
+		    			}
+		    			.selectedoption {
+		    				.lines {
+		    					margin: 20px 0;
+							    border-top: 2px solid #c3c3c3;
+							    border-bottom: 2px solid #c3c3c3;
+							    padding: 4px 0;
+							    text-transform: uppercase;
+							    font-weight: 500;
+		    				}  				
+
+		    				.stock_logo {
+		    					padding-bottom: 1em;
+	    						border-bottom: 1px solid #d2cfcff2;
+	    						.selected_logo, .selected_logo2{
+	    							border: 1px solid #000 !important;
+		    					}
+		    					.logoname {
+		    						width: 150px;
+								    height: 60px;
+								    margin-right: 4px;
+								    margin-bottom: 4px;
+								    cursor: pointer;
+								    position: relative;
+								    display: inline-block;
+								    text-align: center;
+								    border: 1px solid #e8e6e9;
+	    							padding: 4px;
+									img {
+										height: 50px;
+	    								position: relative;
+									}							    
+		    					}
+		    				}
+
+		    				.stock_placement {
+		    					h3 {
+		    						color: #000;
+								    letter-spacing: 1px;
+								    text-transform: uppercase;
+								    font-weight: 500;
+		    					}
+		    					.selected_stock, .selected_stock2 {
+		    						border: 1px solid #000 !important;
+		    					}
+		    					padding-bottom: 2em;
+	    						border-bottom: 1px solid #d2cfcff2;
+	    						.placement_grid {
+	    							.selected_placement {
+	    								border: 1px solid #000 !important;
+	    							}
+	    							.chest {
+	    								display: inline-block;
+	    								
+	    								&.left_chest, &.right_chest, &.left_sleeve {
+	    									margin-right: 15px;
+	    								}
+	    								.text_image {
+	    									font-size: .9em;
+	    								}
+	    								img {
+	    									border: 1px solid #bbbbbb;
+	    									cursor: pointer;
+	    								}
+	    							}
+	    						}
+		    				}
+		    				.stock_position {
+		    					h3 {
+		    						color: #000;
+								    letter-spacing: 1px;
+								    text-transform: uppercase;
+								    font-weight: 500;
+		    					}
+		    					.selected_position, .selected_position2 {
+		    						border: 1px solid #000 !important;
+		    					}
+		    					.position_select {
+		    						.position div {
+		    							display: inline-block;
+									    width: 48%;
+									    padding: 5px 10px;
+									    border: 1px solid #c3c3c3;
+									    font-size: 1.5em;
+									    text-transform: capitalize;
+									    padding-left: .5em;
+									    cursor: pointer;
+									    margin-bottom: 0.5em;
+
+									    &:nth-child(even) {
+									    	margin-left: 15px;
+									    }
+		    						}
+		    					}
+
+		    				}
+		    				.stock_comments {
+		    					textarea {
+		    						border-color: #dddddd;
+		    						color: #000;
+									font-weight: 600;
+									padding-left: .6em;
+									&::-webkit-input-placeholder {
+										font-weight: 600;
+										padding-left: .6em;
+									}
+		    					}
+		    				}
+		    			}
+					}
+
+					.custom_logo {
+						h3.embroideryheadingthree{
+		    				display: inline-block;
+						    padding: .5em .5em;
+						    background: #f3f2f2;
+						    width: 100%;
+						    text-transform: uppercase;
+						    color: #000;
+		    			}
+		    			.lines_num {
+		    				#logooptions_2 {
+		    					width: 15%;
+							    margin-left: 1em;
+							    color: #000;
+	    						border-top: 1px solid #c3c3c3;
+		    				}
+		    			}
+		    			.selectedoption {
+		    				h3 {
+		    					color: #000;
+								letter-spacing: 1px;
+								text-transform: uppercase;
+								font-weight: 500;
+		    				}
+		    				.customlogo_upload, .customlogo2_upload{
+		    					padding: 1em 0;
+		    					input#submitform, input#submitform2 {
+								    background-color: #562670;
+								    border: none;
+								    border-radius: 0;
+								    transition: 0.5s all;
+								    height: 36px;
+								    text-transform: uppercase;
+								    font-family: 'Rubik', sans-serif;
+								    letter-spacing: 1.25px;
+								    font-size: 15.22px !important;
+								    font-weight: 500;
+								    padding: 0 1em !important;
+								    color: #fff;
+								    &:hover {
+								    	background: #712f82;
+								    }
+								}
+		    				}
+		    				.lines {
+		    					margin: 20px 0;
+							    border-top: 2px solid #c3c3c3;
+							    border-bottom: 2px solid #c3c3c3;
+							    padding: 4px 0;
+							    text-transform: uppercase;
+							    font-weight: 500;
+		    				}  				
+
+		    				.customlogo_placement, .customlogo2_placement {
+		    					h3 {
+		    						color: #000;
+								    letter-spacing: 1px;
+								    text-transform: uppercase;
+								    font-weight: 500;
+		    					}
+		    					padding-bottom: 2em;
+	    						border-bottom: 1px solid #d2cfcff2;
+	    						.placement_grid {
+	    							.selected_cusplacement, .selected_cusplacement2 {
+	    								border: 1px solid #000 !important;
+	    							}
+	    							.chest {
+	    								display: inline-block;
+	    								
+	    								&.left_chest, &.right_chest, &.left_sleeve {
+	    									margin-right: 15px;
+	    								}
+	    								.text_image {
+	    									font-size: .9em;
+	    								}
+	    								img {
+	    									border: 1px solid #bbbbbb;
+	    									cursor: pointer;
+	    								}
+	    							}
+	    						}
+		    				}
+		    				.logo_comments {
+		    					textarea {
+		    						border-color: #dddddd;
+		    						color: #000;
+									font-weight: 600;
+									padding-left: .6em;
+									&::-webkit-input-placeholder {
+										font-weight: 600;
+										padding-left: .6em;
+									}
+		    					}
+		    				}
+		    			}
+					}
+		    	}
+			}
+			.embroidery_summary {
+				display: inline-block;
+				width: 35%;
+	    		padding: 30px 0 25px 20px;
+	    		margin-left: 0;
+	    		position: static;
+	    		float: left;
+
+	    		.summarylines {
+	    			width: 100%;
+				    min-height: 80px;
+				    max-height: 100%;
+				    border: 1px solid #ccc;
+				    margin-top: 1em;
+	    		}	    			
+
+	    		.embr_border{
+	    			border: 2px solid #dad5d5;
+	    			padding: 0 26px;
+	    			height: 650px;
+	    			overflow-y: auto;
+	    			&.sticky {				   
+					    width: 29%;				   
+					    min-height: 307px;
+					    max-height: 100%;
+					    height: 85%;
+					    max-width: 408px;
+					}
+	    			h2{
+		    			text-transform: uppercase;
+					    font-weight: 600;
+					    color: rgba(0, 0, 0, 0.6);
+					    letter-spacing: 1px;
+					    padding-bottom: .7em;
+					    border-bottom: 2px solid #d2d2d2;
+		    		}
+		    		.summary_attributes {
+		    			border-bottom: 1px solid #e0e0e0;
+		    			padding-bottom: 1em; 
+		    			text-transform: capitalize;
+		    			overflow-y: scroll;
+					    min-height: 400px;
+					    max-height: 100%;
+					    height: 220px;
+
+		    			.heading_summary {
+		    				h4 {
+		    					margin: 0px !important;
+		    					display: inline-block;
+		    					font-weight: 500;
+		    				}
+		    				.font_value, .font_value2, .font_value3, .placement_value, .placement_value2, .placement_value3 {
+		    					display: inline-block;
+		    					padding-left: 3em;
+		    					text-transform: capitalize;
+		    				}
+		    				.thread_color_value, .thread_color_value2, .thread_color_value3 {
+							    padding-left: 1.9em;
+							    display: inline-block;
+							    text-transform: capitalize;
+							}
+							div{
+								display: inline-block;
+	    						padding-left: 2em;
+							}
+		    			}
+		    			.stock_value, .stockplacement_value, .stockpositionalue, .stock_value2, .stockplacement_value2, .stockpositionalue2 {
+		    				display: inline-block;
+	    					padding-left: 3em;
+	    					text-transform: capitalize;
+		    			}
+		    		}
+		    		.embroidery_agree {
+		    			padding-top: 1em;
+		    			p {
+		    				color: #8e8e8e;
+	    					font-size: 0.85em;
+		    			}
+		    			.agree_check {
+		    				span {
+		    					display: inline-block;
+		    					padding-bottom: 1em;
+		    					padding-left: 1em;
+	    						color: #000;
+	   						    max-width: 93%;    
+	   						    vertical-align: top;
+	   						    font-size: .8em;
+    							line-height: 2em;
+		    				}
+		    			}
+		    		}
+	    		}  	
+
+	    		.line1namediv, .line2namediv, .line3namediv {
+	    			text-align: center;
+				    margin: 0 auto;
+				    font-size: 3em;
+				    text-transform: none;
+	    		}
+	    		.line1stockdiv, .line2stockdiv {
+	    			width: 20%;
+    				margin: 1em auto;
+	    		}
+	    		.line1logodiv, .line2logodiv {
+	    			width: 20%;
+    				margin: 1em auto;
+	    		}
+			}		
+		}
+	}
+
+
+//
+//  Mobile
+//  _____________________________________________
+
+@media screen and (max-width: 768px) { 
+	.catalog-product-view {
+		.embroidery_options {
+			width: 100% !important;
+		}
+		.embroidery_summary {
+			width: 100% !important;
+		    position: relative !important;
+		    margin: 0 !important;
+		}
+		.field.qty .embroidery_checkbox {
+			margin-left: 0px !important;
+		}
+	}
+}
+@media screen and (max-width: 426px) { 
+	.catalog-product-view {
+		.font_grid {
+			.fonts {
+				width: 40% !important;
+	    		text-align: center !important;
+			}
+		}
+		.field.qty .embroidery_checkbox {
+			margin-left: 0px !important;
+		}
+		.red.embroidery_block .embroidery_options .embroidery_options_start .name_start .selectedoption .color_style .color {
+			width: 17%;
+		}
+		.placement_grid .chest {
+		    width: 15%;
+		    text-align: center;
+		}
+		.red.embroidery_block .embr_border sticker, .summary_attributes{ height: 100%; }
+		.red.embroidery_block {
+			.embroidery_options {
+				select.name {
+					&-line1, &-line2, &-line3 {
+						height: 2em;
+					}
+				}
+			} 
+			.embroidery_summary {
+				.embr_border {
+					overflow-y: initial;
+					height: 100%;
+
+					.summary_attributes {
+						height: 100%;
+					    overflow-y: visible;
+					    min-height: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Cart Page */
+.checkout-cart-index {
+	.embroidery_options {
+		li {
+			text-transform : capitalize !important;;
+			width: 100%;
+
+			label {
+				display: inline-block !important;
+			}
+		}
+		.listing_embroidery {
+			padding-bottom: 1em;
+		}
+	}
+	.embroidery_options{	
+		.listing_embroidery{
+			li{
+			    width: auto; margin-right: 15px !important;	float: none !important;		    
+			}
+			li:first-child{
+	    	    width: 100%; margin-top: 10px !important; margin-bottom: 5px !important;
+		    }				
+		}
+	}
+}
+.embroidery-options.item-options {
+	margin: 0 0 15px;
+	 dd{
+		display: inline-block;
+	}
+	dt{
+		display: inline-block;
+		font-weight: 400 !important;
+	}
+}
